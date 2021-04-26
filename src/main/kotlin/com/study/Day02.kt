@@ -1,10 +1,12 @@
 package com.study
 
 fun Day02(){
-    println("---- Day03 ----")
+    println("======================= Day 02 ========================== ")
     println("학습 요약: when 문법 , ")
     println()
     println("1번 : 나가기 , 2번 : 해당 나의 프로그램 보기 , 3번: 선생님 프로그램")
+    println("=========================================================")
+
     print("입력 : ")
     var chk = readLine()!!.trim().toInt()
     println()
@@ -20,7 +22,7 @@ fun Day02(){
 }
 
 fun Day02_P() {
-    println("== 회원관리 프로그램 시작 ==")
+    println("===== 회원관리 프로그램 시작 =====")
 
     print("회원 수 : ")
     val membersCount = readLine()!!.trim().toInt()
