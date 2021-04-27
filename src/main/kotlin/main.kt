@@ -21,6 +21,8 @@ fun main(){
         else if(ck==5) Day05()
         else if(ck==-100) StudyList()
         else if(ck==-1) GitTest()
+        else if(ck==-2) GitTest_Teach()
+        else if(ck==-3) GitTestChk()
 
     }
 }

@@ -183,6 +183,8 @@ var articlesLastId = 0
 
 val articles = mutableListOf<Article>()
 
+var articleTest: Article? = null
+
 fun getArticleById(id: Int): Article? {
     for (article in articles) {
         if (article.id == id) {
