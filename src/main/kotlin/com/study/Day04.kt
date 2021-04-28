@@ -54,20 +54,21 @@ w
     print("회원 수 : ")
     val membersCount = readLine()!!.trim().toInt()
 
-    val members: Array<Member> = Array<Member?>(membersCount) { null } as Array<Member>
+    var members: Array<Member_02> = Array<Member_02?>(membersCount) { null } as Array<Member_02>
 
     println("= ${membersCount}명의 회원 정보를 입력합니다. =")
 
     for (i in members.indices) {
-        val id = i + 1
+        var id = i + 1
         print("${i + 1}번째 회원의 이름 : ")
-        val name = readLine()!!.trim()
+        var name:String = readLine()!!.trim()
         print("${i + 1}번째 회원의 나이 : ")
-        val age = readLine()!!.trim().toInt()
+        var age:Int = readLine()!!.trim().toInt()
         print("${i + 1}번째 회원의 성별(M/W) : ")
-        val gender = readLine()!!.trim()[0]
+        var gender = readLine()!!.trim()[0]
 
-        members[i] = Member(id, name, age, gender)
+        val member = Member_02(id, name, age, gender)
+        members[i] = member
     }
 
     sortMembersByAgeAsc(members)
@@ -83,7 +84,7 @@ w
 }
 
 // 나이 적은순 + 이름 순 + 여자 먼저 + 번호 앞번호 부터
-fun isMemberBiggerThan(member1: Member, member2: Member): Boolean {
+fun isMemberBiggerThan(member1: Member_02, member2: Member_02): Boolean {
     if (member1.age != member2.age) return member1.age > member2.age
     else {
         if (member1.name != member2.name) return member1.name > member2.name
@@ -96,7 +97,7 @@ fun isMemberBiggerThan(member1: Member, member2: Member): Boolean {
     }
 }
 
-fun sortMembersByAgeAsc(members: Array<Member>) {
+fun sortMembersByAgeAsc(members: Array<Member_02>) {
     val maxDepth = members.size - 1
 
     for (depth in maxDepth downTo 1) {

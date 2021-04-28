@@ -210,7 +210,7 @@ fun addArticle(title: String, body: String): Int {
     val regDate = Util.getNowDateStr()
     val updateDate = Util.getNowDateStr()
 
-    val article = Article(id, regDate, updateDate, title, body)
+    val article = Article(id, regDate, updateDate, title, body,0)
     articles.add(article)
 
     articlesLastId = id
@@ -232,7 +232,8 @@ data class Article(
     val regDate: String,
     var updateDate: String,
     var title: String,
-    var body: String
+    var body: String,
+    var member_num:Int
 )
 /* 게시물 관련 끝 */
 

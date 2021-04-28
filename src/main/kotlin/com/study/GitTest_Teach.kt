@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat
 fun GitTest_Teach() {
     println("== 게시판 관리 프로그램 시작 ==")
 
-    makeTestArticles()
+    articleRepository.makeTestArticles()
 
     while (true) {
         print("명령어) ")
@@ -42,11 +42,11 @@ fun GitTest_Teach() {
                 val itemsCountInAPage = 5
                 val offsetCount = (page - 1) * itemsCountInAPage
 
-                val filteredArticles = getFilteredArticles(searchKeyword, offsetCount, itemsCountInAPage)
+                val filteredarticles = getFilteredArticles(searchKeyword, offsetCount, itemsCountInAPage)
 
                 println("번호 / 작성날짜 / 제목")
 
-                for (article in filteredArticles) {
+                for (article in filteredarticles) {
                     println("${article.id} / ${article.regDate} / ${article.title}")
                 }
             }

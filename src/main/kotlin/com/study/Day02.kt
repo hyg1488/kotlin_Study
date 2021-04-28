@@ -27,7 +27,7 @@ fun Day02_P() {
     print("회원 수 : ")
     val membersCount = readLine()!!.trim().toInt()
 
-    val members = Array<Member?>(membersCount) { null }
+    val members = Array<Member_02?>(membersCount) { null }
 
     println("= ${membersCount}명의 회원 정보를 입력합니다. =")
 
@@ -40,7 +40,7 @@ fun Day02_P() {
         print("${i + 1}번째 회원의 성별(M/W) : ")
         val gender = readLine()!!.trim()[0]
 
-        val member = Member(id, name, age, gender)
+        val member = Member_02(id, name, age, gender)
         members[i] = member
     }
 
@@ -54,7 +54,7 @@ fun Day02_P() {
     println("== 회원관리 프로그램 끝 ==")
 }
 
-data class Member(
+data class Member_02(
     val id: Int,
     val name: String,
     val age: Int,
