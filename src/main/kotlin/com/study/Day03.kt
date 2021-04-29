@@ -2,7 +2,7 @@ package com.study
 
 fun Day03(){
     println("======================= Day 03 ========================== ")
-    println("학습 요약: MutableList , ")
+    println("학습 요약: MutableList , Map")
     println()
     println("1번 : 나가기 , 2번 : 해당 나의 프로그램 보기 , 3번: 선생님 프로그램, ")
     println("4번 : Day02 추가 프로그램, 5번 : day02 프로그램에 이름 정렬 추가")

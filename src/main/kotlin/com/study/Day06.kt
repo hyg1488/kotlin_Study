@@ -1,13 +1,14 @@
 package com.study
 
+import sun.font.TrueTypeFont
 import java.lang.Exception
 import java.util.Random
 
 fun Day06(){
     println("---- Day06 ----")
-    println("학습 요약: 회원가입, 로그인, 로그인후 글쓰기, 작성자 리스트에 추가ㅁ")
+    println("학습 요약: 회원가입, 로그인, 로그인후 글쓰기, 작성자 리스트에 추가")
     println()
-    println("1번 : 나가기 , 2번 : 해당 나의 프로그램 보기 , 3번: 선생님 프로그램, 4번 : 추가 프로그램 ")
+    println("1번 : 나가기 , 2번 : 해당 나의 프로그램 보기 ")
     print("입력 : ")
     var chk = readLine()!!.trim().toInt()
     println()
@@ -34,6 +35,10 @@ fun Day06_teach(){
     val login_status = 0
     var login_info: Member? = null
     while (true) {
+        println()
+        if(login_info != null){
+            println("!! 정보 : ${login_info.login_name}님이 현재 접속 중입니다 !!")
+        }
         print("명령어) ")
         val command = readLineTrim()
 
@@ -50,7 +55,7 @@ fun Day06_teach(){
 
                 val filteredArticles = articleRepository.getFilteredArticles(searchKeyword, page, 10)
 
-                println("번호 /     작성날짜     /     갱신날짜      / 제목 / 내용 / 작성자")
+                println("번호 /       작성날짜       /       갱신날짜        /   제목   / 작성자")
 
                 for (article in filteredArticles) {
                     println("${article.id} / ${article.regDate} / ${article.updateDate} / ${article.title} / ${memberRepository.getMember(article.member_num).login_id}")
@@ -78,66 +83,77 @@ fun Day06_teach(){
                 println("내용 : ${article.body}")
             }
             "/article/modify" -> {
-                val id = rq.getIntParam("id", 0)
+                if(loginCheck(login_info)) {
+                    val id = rq.getIntParam("id", 0)
 
-                if (id == 0) {
-                    println("id를 입력해주세요.")
-                    continue
+                    if (id == 0) {
+                        println("id를 입력해주세요.")
+                        continue
+                    }
+
+                    val article = articleRepository.getArticleById(id)
+
+                    if (article == null) {
+                        println("${id}번 게시물은 존재하지 않습니다.")
+                        continue
+                    }
+                    if(article.member_num == login_info!!.login_num) {
+                        print("${id}번 게시물 새 제목 : ")
+                        val title = readLineTrim()
+                        print("${id}번 게시물 새 내용 : ")
+                        val body = readLineTrim()
+
+                        articleRepository.modifyArticle(id, title, body)
+
+                        println("${id}번 게시물이 수정되었습니다.")
+                    }else{
+                        println("알림) 수정은 본인 글만 가능합니다.")
+                    }
                 }
-
-                val article = articleRepository.getArticleById(id)
-
-                if (article == null) {
-                    println("${id}번 게시물은 존재하지 않습니다.")
-                    continue
-                }
-
-                print("${id}번 게시물 새 제목 : ")
-                val title = readLineTrim()
-                print("${id}번 게시물 새 내용 : ")
-                val body = readLineTrim()
-
-                articleRepository.modifyArticle(id, title, body)
-
-                println("${id}번 게시물이 수정되었습니다.")
             }
             "/article/delete" -> {
-                val id = rq.getIntParam("id", 0)
+                if(loginCheck(login_info)) {
+                    val id = rq.getIntParam("id", 0)
 
-                if (id == 0) {
-                    println("id를 입력해주세요.")
-                    continue
+                    if (id == 0) {
+                        println("id를 입력해주세요.")
+                        continue
+                    }
+
+                    val article = articleRepository.getArticleById(id)
+
+                    if (article == null) {
+                        println("${id}번 게시물은 존재하지 않습니다.")
+                        continue
+                    }
+                    if(article.member_num == login_info!!.login_num) {
+                        articleRepository.deleteArticle(article)
+                        println("알림) ${id}번 글을 정상적으로 삭제했습니다.")
+                    }else{
+                        println("알림) 본인이 작성한 글만 삭제가 가능합니다.")
+                    }
                 }
-
-                val article = articleRepository.getArticleById(id)
-
-                if (article == null) {
-                    println("${id}번 게시물은 존재하지 않습니다.")
-                    continue
-                }
-
-                articleRepository.deleteArticle(article)
             }
 
             "/article/write" -> {
-                if(login_info ==null){
-                    println("알림) 글쓰기는 로그인 후 이용해주세요.")
-                }else {
+                if(loginCheck(login_info)){
                     print("제목 : ")
                     val title = readLineTrim()
                     print("내용 : ")
                     val body = readLineTrim()
 
-                    val id = articleRepository.addArticle(title, body,login_info.login_num)
+                    val id = articleRepository.addArticle(title, body,login_info!!.login_num)
 
                     println("${id}번 게시물이 작성되었습니다.")
                 }
+
             }
 
-            "/article/join" ->{
+            "/member/join" ->{
                 println("=== 회원 가입 ===")
                 print("로그인 아이디 : ")
                 var join_id = readLineTrim()
+
                 print("로그인 비밀번호 : ")
                 var join_passwd = readLineTrim()
                 print("이름 : ")
@@ -154,7 +170,7 @@ fun Day06_teach(){
                 else println("회원가입 실패")
             }
 
-            "/article/login" ->{
+            "/member/login" ->{
                 println("=== 로그인 ===")
                 print("로그인 아이디 : ")
                 var join_id = readLineTrim()
@@ -171,6 +187,19 @@ fun Day06_teach(){
                 }
 
             }
+            "/member/logout" ->{
+                if(loginCheck(login_info)){
+                    println("${login_info!!.login_name}님께서 로그아웃 하셨습니다. ")
+                    login_info = null
+                    if(login_info == null) println("알림) 정상적으로 로그아웃 되었습니다.")
+                    else println("로그아웃 에러 : 나중에 다시 시도해주세요")
+                }
+            }
+            else -> {
+                println("${command}는 존재하지 않는 명령어입니다.")
+            }
+
+
 
         }
     }
@@ -178,6 +207,17 @@ fun Day06_teach(){
     println("== SIMPLE SSG 끝 ==")
 }
 
+
+fun loginCheck(login_info:Member?):Boolean{
+    var chk:Boolean = false
+    if(login_info ==null){
+        println("알림) 해당 명령어는 로그인 후 이용해주세요.")
+    }else {
+        chk = true
+    }
+
+    return chk
+}
 
 data class Member(
     var login_num:Int,

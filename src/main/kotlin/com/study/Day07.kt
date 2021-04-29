@@ -14,7 +14,7 @@ fun Day07(){
     if(chk == 1){
         println("메인 페이지로 이동")
     }else if(chk == 2){
-//        Day07_P()
+            Day06_teach()
     }else if(chk == 3){
 //        Day00_teach()
     }else if(chk == 4){
