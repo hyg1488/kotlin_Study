@@ -2,11 +2,16 @@ package com.study
 
 import sun.font.TrueTypeFont
 import java.lang.Exception
+import java.text.SimpleDateFormat
 import java.util.Random
+
+
+var login_info: Member? = null
 
 fun Day06(){
     println("---- Day06 ----")
-    println("학습 요약: 회원가입, 로그인, 로그인후 글쓰기, 작성자 리스트에 추가")
+    println("학습 요약: 회원가입, 로그인, 로그인후 글쓰기, 작성자 리스트에 추가" +
+            "\n ! Main = day06 ,  Controller = day07")
     println()
     println("1번 : 나가기 , 2번 : 해당 나의 프로그램 보기 ")
     print("입력 : ")
@@ -32,12 +37,13 @@ fun Day06_teach(){
     println("== SIMPLE SSG 시작 ==")
     memberRepository.makeTestMember()
     articleRepository.makeTestArticles()
-    val login_status = 0
-    var login_info: Member? = null
+    boardRepository.makeTestBoard()
+    var board:BoardController = BoardController()
+
     while (true) {
         println()
         if(login_info != null){
-            println("!! 정보 : ${login_info.login_name}님이 현재 접속 중입니다 !!")
+            println("!! 정보 : ${login_info!!.login_name}님이 현재 접속 중입니다 !!")
         }
         print("명령어) ")
         val command = readLineTrim()
@@ -46,154 +52,40 @@ fun Day06_teach(){
 
         when (rq.actionPath) {
             "/system/exit" -> {
-                println("프로그램을 종료합니다.")
+                systemController__exit(rq)
                 break
             }
             "/article/list" -> {
-                val page = rq.getIntParam("page", 1)
-                val searchKeyword = rq.getStringParam("searchKeyword", "")
-
-                val filteredArticles = articleRepository.getFilteredArticles(searchKeyword, page, 10)
-
-                println("번호 /       작성날짜       /       갱신날짜        /   제목   / 작성자")
-
-                for (article in filteredArticles) {
-                    println("${article.id} / ${article.regDate} / ${article.updateDate} / ${article.title} / ${memberRepository.getMember(article.member_num).login_id}")
-                }
+                articleController.list(rq)
             }
             "/article/detail" -> {
-                val id = rq.getIntParam("id", 0)
-
-                if (id == 0) {
-                    println("id를 입력해주세요.")
-                    continue
-                }
-
-                val article = articleRepository.getArticleById(id)
-
-                if (article == null) {
-                    println("${id}번 게시물은 존재하지 않습니다.")
-                    continue
-                }
-
-                println("번호 : ${article.id}")
-                println("작성날짜 : ${article.regDate}")
-                println("갱신날짜 : ${article.updateDate}")
-                println("제목 : ${article.title}")
-                println("내용 : ${article.body}")
+                articleController.detail(rq)
             }
             "/article/modify" -> {
-                if(loginCheck(login_info)) {
-                    val id = rq.getIntParam("id", 0)
-
-                    if (id == 0) {
-                        println("id를 입력해주세요.")
-                        continue
-                    }
-
-                    val article = articleRepository.getArticleById(id)
-
-                    if (article == null) {
-                        println("${id}번 게시물은 존재하지 않습니다.")
-                        continue
-                    }
-                    if(article.member_num == login_info!!.login_num) {
-                        print("${id}번 게시물 새 제목 : ")
-                        val title = readLineTrim()
-                        print("${id}번 게시물 새 내용 : ")
-                        val body = readLineTrim()
-
-                        articleRepository.modifyArticle(id, title, body)
-
-                        println("${id}번 게시물이 수정되었습니다.")
-                    }else{
-                        println("알림) 수정은 본인 글만 가능합니다.")
-                    }
-                }
+                articleController.modify(rq)
             }
             "/article/delete" -> {
-                if(loginCheck(login_info)) {
-                    val id = rq.getIntParam("id", 0)
-
-                    if (id == 0) {
-                        println("id를 입력해주세요.")
-                        continue
-                    }
-
-                    val article = articleRepository.getArticleById(id)
-
-                    if (article == null) {
-                        println("${id}번 게시물은 존재하지 않습니다.")
-                        continue
-                    }
-                    if(article.member_num == login_info!!.login_num) {
-                        articleRepository.deleteArticle(article)
-                        println("알림) ${id}번 글을 정상적으로 삭제했습니다.")
-                    }else{
-                        println("알림) 본인이 작성한 글만 삭제가 가능합니다.")
-                    }
-                }
+                articleController.delete(rq)
             }
-
             "/article/write" -> {
-                if(loginCheck(login_info)){
-                    print("제목 : ")
-                    val title = readLineTrim()
-                    print("내용 : ")
-                    val body = readLineTrim()
-
-                    val id = articleRepository.addArticle(title, body,login_info!!.login_num)
-
-                    println("${id}번 게시물이 작성되었습니다.")
-                }
-
+                articleController.write(rq)
             }
 
             "/member/join" ->{
-                println("=== 회원 가입 ===")
-                print("로그인 아이디 : ")
-                var join_id = readLineTrim()
-
-                print("로그인 비밀번호 : ")
-                var join_passwd = readLineTrim()
-                print("이름 : ")
-                var join_name = readLineTrim()
-                print("별명 : ")
-                var join_nickname= readLineTrim()
-                print("휴대전화 : ")
-                var join_phone = readLineTrim()
-                print("이메일 : ")
-                var join_email = readLineTrim()
-
-                var chk = memberRepository.userJoin(join_id, join_passwd, join_name, join_nickname, join_phone, join_email)
-                if(chk == 0) println("회원가입이 완료 되었습니다.")
-                else println("회원가입 실패")
+                memberConntroller.join(rq)
             }
 
             "/member/login" ->{
-                println("=== 로그인 ===")
-                print("로그인 아이디 : ")
-                var join_id = readLineTrim()
-                print("로그인 비밀번호 : ")
-                var join_passwd = readLineTrim()
-
-                var chk = memberRepository.userLogin(join_id, join_passwd)
-
-                if(chk.login_id == "") println("로그인 실패 ! ID 값을 다시 확인해주세요.")
-                else if(chk.login_id == "pass_fail") println("로그인 실패 ! 비밀 번호 값을 다시 확인해주세요.")
-                else {
-                    println("! 로그인 성공! ${chk.login_name} 님 환영합니다.")
-                    login_info = chk
-                }
-
+                memberConntroller.login(rq)
             }
             "/member/logout" ->{
-                if(loginCheck(login_info)){
-                    println("${login_info!!.login_name}님께서 로그아웃 하셨습니다. ")
-                    login_info = null
-                    if(login_info == null) println("알림) 정상적으로 로그아웃 되었습니다.")
-                    else println("로그아웃 에러 : 나중에 다시 시도해주세요")
-                }
+                memberConntroller.logout(rq)
+            }
+            "/board/add"->{
+                board.add(rq)
+            }
+            "/board/list" ->{
+                board.list(rq)
             }
             else -> {
                 println("${command}는 존재하지 않는 명령어입니다.")
@@ -219,6 +111,7 @@ fun loginCheck(login_info:Member?):Boolean{
     return chk
 }
 
+// 회원 DTO
 data class Member(
     var login_num:Int,
     var login_id:String ,
@@ -319,18 +212,18 @@ object articleRepository {
         return null
     }
 
-    fun addArticle(title: String, body: String, user_num:Int):Int {
+    fun addArticle(title: String, body: String, user_num:Int,board_id: Int):Int {
         val id = ++lastId
         val regDate = Util.getNowDateStr()
         val updateDate = Util.getNowDateStr()
-        articles.add(Article(id, regDate, updateDate, title, body, user_num))
+        articles.add(Article(id, regDate, updateDate, title, body, user_num,board_id))
         return id
     }
 
     fun makeTestArticles() {
         val random = Random()
         for (id in 1..100) {
-            addArticle("제목_$id", "내용_$id", random.nextInt(11))
+            addArticle("제목_$id", "내용_$id", random.nextInt(11), random.nextInt(2))
         }
     }
 
@@ -342,19 +235,25 @@ object articleRepository {
         article.updateDate = Util.getNowDateStr()
     }
 
-    fun getFilteredArticles(searchKeyword: String, page: Int, itemsCountInAPage: Int): List<Article> {
-        val filtered1Articles = getSearchKeywordFilteredArticles(articles, searchKeyword)
+    fun getFilteredArticles(searchKeyword: String, page: Int,board_id: Int, itemsCountInAPage: Int): List<Article> {
+        val filtered1Articles = getSearchKeywordFilteredArticles(articles, searchKeyword,board_id)
         val filtered2Articles = getPageFilteredArticles(filtered1Articles, page, itemsCountInAPage)
 
         return filtered2Articles
     }
 
-    private fun getSearchKeywordFilteredArticles(articles: List<Article>, searchKeyword: String): List<Article> {
+    private fun getSearchKeywordFilteredArticles(articles: List<Article>, searchKeyword: String, board_id: Int): List<Article> {
         val filteredArticles = mutableListOf<Article>()
 
         for (article in articles) {
-            if (article.title.contains(searchKeyword)) {
-                filteredArticles.add(article)
+            if(board_id == 0) {
+                if (article.title.contains(searchKeyword)) {
+                    filteredArticles.add(article)
+                }
+            }else{
+                if (board_id == article.board_id && article.title.contains(searchKeyword)) {
+                    filteredArticles.add(article)
+                }
             }
         }
 
@@ -425,6 +324,31 @@ object memberRepository{
     }
 }
 
+data class Board(
+    var boardId:Int,
+    var boardName:String
+){}
+
+object boardRepository{
+    var boards = mutableListOf<Board>()
+    fun boardCheck(board_id: Int, boardName:String):Boolean{
+        for(i in boards){
+            if(i.boardId == board_id) return false
+            else if(i.boardName == boardName) return false
+
+        }
+        return true
+    }
+
+    fun boardAdd(board_id: Int, boardName:String){
+        boards.add(Board(board_id, boardName))
+    }
+
+    fun makeTestBoard(){
+        boardRepository.boardAdd(0, "공지")
+        boardRepository.boardAdd(1,"자유")
+    }
+}
 
 //fun Day00_teach(){
 //
@@ -432,3 +356,74 @@ object memberRepository{
 //fun Day00_addP(){
 //
 //}
+
+var articlesLastId = 0
+
+val articles = mutableListOf<Article>()
+
+var articleTest: Article? = null
+
+fun getArticleById(id: Int): Article? {
+    for (article in articles) {
+        if (article.id == id) {
+            return article
+        }
+    }
+
+    return null
+}
+
+fun getArticleById_search(id: Int, articleSearch:List<Article>): Article? {
+    for (article in articleSearch) {
+        if (article.id == id) {
+            return article
+        }
+    }
+
+    return null
+}
+
+fun addArticle(title: String, body: String): Int {
+    val id = articlesLastId + 1
+    val regDate = Util.getNowDateStr()
+    val updateDate = Util.getNowDateStr()
+    var ran = Random()
+    val article = Article(id, regDate, updateDate, title, body,0, ran.nextInt(1))
+    articles.add(article)
+
+    articlesLastId = id
+
+    return id
+}
+
+fun makeTestArticles() {
+    for (id in 1..100) {
+        val title = "제목$id"
+        val body = "내용_$id"
+
+        addArticle(title, body)
+    }
+}
+
+data class Article(
+    val id: Int,
+    val regDate: String,
+    var updateDate: String,
+    var title: String,
+    var body: String,
+    var member_num:Int,
+    var board_id:Int
+)
+/* 게시물 관련 끝 */
+
+/* 유틸관련 시작 */
+fun readLineTrim() = readLine()!!.trim()
+
+object Util {
+    fun getNowDateStr(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+
+        return dateFormat.format(System.currentTimeMillis())
+    }
+}
+/* 유틸관련 끝 */
