@@ -106,7 +106,7 @@ object articleController{
             val body = readLineTrim()
             print("게시판 선택 : ")
             val board_id = readLineTrim().toInt()
-            if(!boardRepository.boardCheck(board_id,"")) {
+            if(!boardRepository.boardCheckInt(board_id)) {
                 val id = articleRepository.addArticle(title, body, login_info!!.login_num, board_id)
                 println("${id}번 게시물이 작성되었습니다.")
             }else{
@@ -216,29 +216,29 @@ object articleController{
 
 
 class BoardController {
-        fun add(rq: Rq) {
-            print("이름 : ")
-            var boardName = readLineTrim()
-            print("코드 : ")
-            var boardId = readLineTrim().toInt()
+    fun add(rq: Rq) {
+        print("이름 : ")
+        var boardName = readLineTrim()
+        print("코드 : ")
+        var boardId = readLineTrim().toInt()
 
-            var chk = boardRepository.boardCheck(boardId, boardName)
+        var chk = boardRepository.boardCheck(boardId, boardName)
 
-            if(chk){
-                boardRepository.boardAdd(boardId, boardName)
-                println("${boardName} 게시물이 생성 되었습니다.")
+        if(chk){
+            boardRepository.boardAdd(boardId, boardName)
+            println("${boardName} 게시물이 생성 되었습니다.")
 
-            }else{
-                println("알림) 이미 만들어진 중복 값이 있습니다.")
-            }
+        }else{
+            println("알림) 이미 만들어진 중복 값이 있습니다.")
         }
+    }
 
-        fun list(rq: Rq) {
-            println("게시판 코드 / 이름")
-            for (i in boardRepository.boards){
-                println("${i.boardId}  /  ${i.boardName}")
-            }
+    fun list(rq: Rq) {
+        println("게시판 코드 / 이름")
+        for (i in boardRepository.boards){
+            println("${i.boardId}  /  ${i.boardName}")
         }
+    }
 
 }
 

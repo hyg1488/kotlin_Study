@@ -1,0 +1,17 @@
+[ {
+  "id" : 1,
+  "regDate" : "2021-05-03 13:07:16",
+  "updateDate" : "",
+  "title" : "Test01",
+  "body" : "Testfile",
+  "member_num" : 0,
+  "board_id" : 0
+}, {
+  "id" : 2,
+  "regDate" : "2021-05-03 13:07:25",
+  "updateDate" : "",
+  "title" : "Test02",
+  "body" : "test02file",
+  "member_num" : 0,
+  "board_id" : 0
+} ]

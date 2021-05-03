@@ -1,12 +1,24 @@
 package com.study
+import com.google.gson.Gson
+
 
 import sun.font.TrueTypeFont
+import java.io.FileReader
+import java.io.IOException
 import java.lang.Exception
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardOpenOption
 import java.text.SimpleDateFormat
 import java.util.Random
 
+val pathArticle = "C:\\Users\\yungi\\IdeaProjects\\Study\\src\\main\\assets\\article.json"
+val PathMember = "C:\\Users\\yungi\\IdeaProjects\\Study\\src\\main\\assets\\member.json"
+val pathBoard = "C:\\Users\\yungi\\IdeaProjects\\Study\\src\\main\\assets\\board.json"
 
 var login_info: Member? = null
+var articleString = ""
+var memberString = ""
 
 fun Day06(){
     println("---- Day06 ----")
@@ -36,8 +48,8 @@ fun Day06(){
 fun Day06_teach(){
     println("== SIMPLE SSG 시작 ==")
     memberRepository.makeTestMember()
-    articleRepository.makeTestArticles()
     boardRepository.makeTestBoard()
+    articleRepository.loaddingArticle()
     var board:BoardController = BoardController()
 
     while (true) {
@@ -51,6 +63,7 @@ fun Day06_teach(){
         val rq = Rq(command)
 
         when (rq.actionPath) {
+
             "/system/exit" -> {
                 systemController__exit(rq)
                 break
@@ -217,7 +230,60 @@ object articleRepository {
         val regDate = Util.getNowDateStr()
         val updateDate = Util.getNowDateStr()
         articles.add(Article(id, regDate, updateDate, title, body, user_num,board_id))
+        if(articleString == "") {
+            articleString += """ {
+                                "id" : "${id}",
+                                "regDate" : "${regDate}",
+                                "updateDate" : "${updateDate}",
+                                "title" : "${title}",
+                                "body" : "${body}",
+                                "user_num" : "${user_num}",
+                                "board_id" : "${board_id}"
+                            }""".trimIndent()
+        }else{
+            articleString += """&{
+                                "id" : "${id}",
+                                "regDate" : "${regDate}",
+                                "updateDate" : "${updateDate}",
+                                "title" : "${title}",
+                                "body" : "${body}",
+                                "user_num" : "${user_num}",
+                                "board_id" : "${board_id}"
+                            }""".trimIndent()
+        }
+        
+        try{
+            Files.write(Paths.get(pathArticle), articleString.toByteArray(), StandardOpenOption.CREATE)
+        }catch (e:IOException){
+            println("저장 에러")
+        }
+        
         return id
+    }
+
+    fun loaddingArticle(){
+        val read = FileReader(pathArticle)
+        val articleStringList = read.readText().split("&")
+        for (i in articleStringList.indices){
+            if(i == 0){
+                articleString = articleStringList[0]
+            }else{
+                articleString += "&"+articleStringList[i]
+            }
+
+            try {
+                val articleLoad = Gson().fromJson(articleStringList[i], Article::class.java)
+                articleRepository.articles.add(articleLoad)
+
+            }catch (e:Exception){
+            }
+            if(i != 0) {
+                if (i == articleStringList.size - 1) {
+                    lastId = articles[i].id
+                }
+            }
+        }
+
     }
 
     fun makeTestArticles() {
@@ -331,6 +397,12 @@ data class Board(
 
 object boardRepository{
     var boards = mutableListOf<Board>()
+    fun boardCheckInt(board_id: Int):Boolean{
+        for(i in boards){
+            if(i.boardId == board_id) return false
+        }
+        return true
+    }
     fun boardCheck(board_id: Int, boardName:String):Boolean{
         for(i in boards){
             if(i.boardId == board_id) return false
@@ -400,7 +472,6 @@ fun makeTestArticles() {
     for (id in 1..100) {
         val title = "제목$id"
         val body = "내용_$id"
-
         addArticle(title, body)
     }
 }

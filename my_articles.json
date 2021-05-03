@@ -1,0 +1,61 @@
+[ {
+  "title" : "MyArticle 1",
+  "date" : {
+    "year" : 2021,
+    "month" : "MAY",
+    "dayOfMonth" : 3,
+    "dayOfWeek" : "MONDAY",
+    "dayOfYear" : 123,
+    "monthValue" : 5,
+    "second" : 51,
+    "hour" : 12,
+    "minute" : 19,
+    "nano" : 618000000,
+    "chronology" : {
+      "id" : "ISO",
+      "calendarType" : "iso8601"
+    }
+  },
+  "viewCnt" : 0,
+  "content" : "Hello, Jackson! 1"
+}, {
+  "title" : "MyArticle 2",
+  "date" : {
+    "year" : 2021,
+    "month" : "MAY",
+    "dayOfMonth" : 3,
+    "dayOfWeek" : "MONDAY",
+    "dayOfYear" : 123,
+    "monthValue" : 5,
+    "second" : 51,
+    "hour" : 12,
+    "minute" : 19,
+    "nano" : 618000000,
+    "chronology" : {
+      "id" : "ISO",
+      "calendarType" : "iso8601"
+    }
+  },
+  "viewCnt" : 0,
+  "content" : "Hello, Jackson! 2"
+}, {
+  "title" : "MyArticle 3",
+  "date" : {
+    "year" : 2021,
+    "month" : "MAY",
+    "dayOfMonth" : 3,
+    "dayOfWeek" : "MONDAY",
+    "dayOfYear" : 123,
+    "monthValue" : 5,
+    "second" : 51,
+    "hour" : 12,
+    "minute" : 19,
+    "nano" : 618000000,
+    "chronology" : {
+      "id" : "ISO",
+      "calendarType" : "iso8601"
+    }
+  },
+  "viewCnt" : 0,
+  "content" : "Hello, Jackson! 3"
+} ]

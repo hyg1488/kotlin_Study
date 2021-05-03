@@ -14,7 +14,6 @@ fun main(){
             println("시스템 종료")
             break
         }
-
         else if(ck==1) Day01()
         else if(ck==2) Day02()
         else if(ck==3) Day03()
@@ -23,6 +22,9 @@ fun main(){
         else if(ck==6) Day06()
         else if(ck==7) Day07()
         else if(ck==8) Day08()
+        else if(ck==9) Day09()
+        else if(ck==10) Day10()
+
         else if(ck==-100) StudyList()
         else if(ck==-1) GitTest()
         else if(ck==-2) GitTest_Teach()

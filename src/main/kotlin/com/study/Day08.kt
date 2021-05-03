@@ -62,8 +62,13 @@ fun test() {
     
     try {
         val read = FileReader(path)
-        val jsonString = read.readText()
-        val user = Gson().fromJson(jsonString, User::class.java)
+        val text = """
+            {
+                "name" : "Ready Kim",
+                "email" : "ready.kim@gmail.com"
+            }
+        """.trimIndent()
+        val user = Gson().fromJson(text, User::class.java)
         println(user)
     }catch (e:Exception){
         println(e.message)

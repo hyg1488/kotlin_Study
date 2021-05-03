@@ -1,9 +1,11 @@
 package com.study
 
+
 fun Day00(){
     println("======================= Day 00 ============================= ")
     println("학습 요약: ")
     println()
+
     println("1번 : 나가기 , 2번 : 해당 나의 프로그램 보기 ,")
     println("3번: 선생님 프로그램, 4번 : 추가 프로그램 ")
     println("============================================================== ")
@@ -35,3 +37,8 @@ fun Day00(){
 //fun Day00_addP(){
 //
 //}
+
+data class arr04(
+    var id:Int,
+    var name:String
+){}
