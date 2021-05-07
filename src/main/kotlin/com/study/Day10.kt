@@ -6,7 +6,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import java.io.File
 
 fun Day10() {
-    println("======================= Day 00 ============================= ")
+    println("======================= Day 10 ============================= ")
     println("학습 요약: .contain() : 문자열이 포함 되있는지 확인 " +
             "\n        lastIndex(), jackson 사용 ")
     println()

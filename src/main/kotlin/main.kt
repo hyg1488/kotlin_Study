@@ -24,6 +24,7 @@ fun main(){
         else if(ck==8) Day08()
         else if(ck==9) Day09()
         else if(ck==10) Day10()
+        else if(ck==11) Day11()
 
         else if(ck==-100) StudyList()
         else if(ck==-1) GitTest()
